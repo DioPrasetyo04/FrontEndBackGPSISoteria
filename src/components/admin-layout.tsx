@@ -32,7 +32,6 @@ import {
   Image,
   Users,
   UserCheck,
-  Church,
   LogOut,
   Shield,
   ChevronDown,
@@ -348,8 +347,12 @@ export function AdminLayout({ children }: { children?: React.ReactNode }) {
       <Sidebar className="border-r border-border/60">
         <SidebarHeader className="p-4 border-b border-border/50">
           <div className="flex items-center gap-3">
-            <div className="size-10 rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-xs">
-              <Church className="size-5" />
+            <div className="size-10 rounded-xl bg-white dark:bg-slate-900 border border-border/60 p-1 flex items-center justify-center shrink-0 shadow-xs">
+              <img
+                src="/images/logo-gpsi.png"
+                alt="Logo GPSI"
+                className="h-full w-full object-contain"
+              />
             </div>
             <div className="flex flex-col min-w-0">
               <span className="font-bold text-sm tracking-tight truncate text-foreground">

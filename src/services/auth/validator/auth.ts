@@ -117,3 +117,27 @@ export type ResendApprovalInput = z.infer<typeof resendApprovalSchema>;
 export type ProcessApprovalInput = z.infer<typeof processApprovalSchema>;
 export type GoogleAuthInput = z.infer<typeof googleAuthSchema>;
 export type FacebookAuthInput = z.infer<typeof facebookAuthSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email({ message: "Format email tidak valid" }),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, { message: "Token reset password wajib disertakan" }),
+  newPassword: passwordSchema,
+});
+
+export const resetPasswordFormSchema = z
+  .object({
+    token: z.string().min(1, { message: "Token reset password wajib disertakan" }),
+    newPassword: passwordSchema,
+    confirmPassword: z.string().min(1, { message: "Konfirmasi kata sandi wajib diisi" }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Konfirmasi kata sandi tidak cocok dengan kata sandi baru",
+    path: ["confirmPassword"],
+  });
+
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordFormInput = z.infer<typeof resetPasswordFormSchema>;

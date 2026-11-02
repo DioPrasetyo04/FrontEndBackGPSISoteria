@@ -3,6 +3,8 @@ import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
 import { PendingApprovalPage } from "@/pages/auth/PendingApprovalPage";
 import { VerifyApprovalPage } from "@/pages/auth/VerifyApprovalPage";
+import { ForgotPasswordPage } from "@/pages/auth/ForgotPasswordPage";
+import { ResetPasswordPage } from "@/pages/auth/ResetPasswordPage";
 import { PublicOnlyRoute } from "@/components/ProtectedRoute";
 
 const authRoutes: RouteObject[] = [
@@ -19,6 +21,22 @@ const authRoutes: RouteObject[] = [
     element: (
       <PublicOnlyRoute>
         <RegisterPage />
+      </PublicOnlyRoute>
+    ),
+  },
+  {
+    path: "/auth/forgot-password",
+    element: (
+      <PublicOnlyRoute>
+        <ForgotPasswordPage />
+      </PublicOnlyRoute>
+    ),
+  },
+  {
+    path: "/auth/reset-password",
+    element: (
+      <PublicOnlyRoute>
+        <ResetPasswordPage />
       </PublicOnlyRoute>
     ),
   },

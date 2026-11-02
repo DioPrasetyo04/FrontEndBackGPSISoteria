@@ -90,9 +90,16 @@ export function getCurrentUserId(): string | null {
 
 export function getPublicAssetUrl(path?: string | null): string {
   if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (
+    path.startsWith("http://") ||
+    path.startsWith("https://") ||
+    path.startsWith("data:") ||
+    path.startsWith("blob:")
+  ) {
+    return path;
+  }
   const baseUrl = (
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:3005/api/soteria/v1"
+    import.meta.env.VITE_BACKEND_URL || "https://back-end-gpsi-soteria.vercel.app/api/soteria/v1"
   ).replace(/\/api\/.*$/, "");
   return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
 }

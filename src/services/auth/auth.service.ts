@@ -6,6 +6,8 @@ import type {
   RegisterInput,
   ResendApprovalInput,
   ProcessApprovalInput,
+  ForgotPasswordInput,
+  ResetPasswordInput,
 } from "./validator/auth";
 import type { LoginSchema } from "./types/auth";
 import { routeGlobalInstance, routePrivateInstance } from "@/lib/config_backend";
@@ -53,3 +55,24 @@ export const loginByFacebook = async (
   data: FacebookAuthInput,
 ): Promise<BaseResponse<LoginSchema>> =>
   routeGlobalInstance.post("/auth/facebook", data).then((res) => res.data);
+
+export const forgotPassword = async (
+  data: ForgotPasswordInput,
+): Promise<BaseResponse<{ message: string; cooldownSeconds: number }>> =>
+  routeGlobalInstance
+    .post("/auth/forgot-password", data)
+    .then((res) => res.data);
+
+export const verifyResetToken = async (
+  token: string,
+): Promise<BaseResponse<{ valid: boolean; email: string; name: string }>> =>
+  routeGlobalInstance
+    .get(`/auth/verify-reset-token?token=${encodeURIComponent(token)}`)
+    .then((res) => res.data);
+
+export const resetPassword = async (
+  data: ResetPasswordInput,
+): Promise<BaseResponse<{ message: string }>> =>
+  routeGlobalInstance
+    .post("/auth/reset-password", data)
+    .then((res) => res.data);

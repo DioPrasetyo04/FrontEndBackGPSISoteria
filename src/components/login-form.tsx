@@ -17,7 +17,42 @@ import { Input } from "@/components/ui/input"
 import { login, loginByGoogle, loginByFacebook } from "@/services/auth/auth.service"
 import { setSession } from "@/lib/utils"
 import { toast } from "sonner"
-import { Church, Eye, EyeOff, ShieldAlert, Sparkles, CheckCircle2, ArrowRight } from "lucide-react"
+import { Eye, EyeOff, ShieldAlert, Sparkles, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, EffectFade } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/effect-fade"
+
+const cardSlides = [
+  {
+    image: "/images/background.jpg",
+    tag: "Gereja Induk GPSI Soteria",
+    title: "GPSI Soteria",
+    quote: "Melayani dengan kasih Kristus, teguh dalam kebenaran firman, dan bersaksi bagi kemuliaan nama Tuhan di tengah jemaat dan masyarakat.",
+    badges: ["Pelayanan Terpadu", "Warta Jemaat", "Renungan Harian"],
+  },
+  {
+    image: "/images/background-tentang-kami.jpg",
+    tag: "Persekutuan Kasih",
+    title: "Kebersamaan Jemaat",
+    quote: "Hendaklah kamu sehati sefikir, satu kasih, satu jiwa, dan satu tujuan dalam melayani Tuhan dengan kerendahan hati.",
+    badges: ["Komunitas Iman", "Doa Bersama", "Saling Menguatkan"],
+  },
+  {
+    image: "/images/gallery/gallery.jpg",
+    tag: "Sanctuary Pelayanan",
+    title: "Ibadah & Pujian",
+    quote: "Membangun jemaat yang berakar, bertumbuh, berbuah, dan bersaksi teguh dalam kebenaran firman Allah.",
+    badges: ["Pujian Penyembahan", "Firman Hidup", "Paduan Suara"],
+  },
+  {
+    image: "https://images.unsplash.com/photo-1544427920-c49ccfb85579?q=80&w=1600&auto=format&fit=crop",
+    tag: "Worship Sanctuary",
+    title: "Kemuliaan Tuhan",
+    quote: "Menghadirkan hadirat Tuhan dan kedamaian sorgawi dalam setiap persekutuan jemaat dan keluarga.",
+    badges: ["Doa Syafaat", "Persekutuan", "Generasi Muda"],
+  },
+]
 
 export function LoginForm({
   className,
@@ -28,6 +63,8 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [cardSlideIndex, setCardSlideIndex] = useState(0);
+  const [cardSwiper, setCardSwiper] = useState<any>(null);
   const [pendingUser, setPendingUser] = useState<{
     email: string;
     name?: string;
@@ -309,11 +346,6 @@ export function LoginForm({
     }
   };
 
-  const handleQuickFill = (testEmail: string, testPass: string) => {
-    setEmail(testEmail);
-    setPassword(testPass);
-    setErrorMessage(null);
-  };
 
   const isPending =
     loginMutation.isPending ||
@@ -329,8 +361,12 @@ export function LoginForm({
             <FieldGroup className="space-y-4">
               {/* Header with Church Badge */}
               <div className="flex flex-col items-center gap-2 text-center">
-                <div className="size-14 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-xs p-2.5">
-                  <Church className="size-7" />
+                <div className="size-16 rounded-2xl bg-white dark:bg-slate-900 border border-border/60 p-2 flex items-center justify-center shadow-md">
+                  <img
+                    src="/images/logo-gpsi.png"
+                    alt="Logo GPSI Soteria"
+                    className="h-full w-full object-contain"
+                  />
                 </div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
@@ -414,6 +450,14 @@ export function LoginForm({
                   required
                   className="h-10 text-sm text-foreground bg-background border-border/80 focus-visible:border-indigo-600 focus-visible:ring-indigo-600/20 rounded-xl"
                 />
+                <div className="flex justify-end pt-1">
+                  <Link
+                    to="/auth/forgot-password"
+                    className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 hover:underline transition-colors"
+                  >
+                    Lupa kata sandi?
+                  </Link>
+                </div>
               </Field>
 
               {/* Submit Button */}
@@ -494,32 +538,7 @@ export function LoginForm({
                 </Button>
               </div>
 
-              {/* Quick Fill Testing Credentials */}
-              <div className="pt-2">
-                <p className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider mb-2 text-center">
-                  Akun Pengujian Cepat:
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickFill("user1@gmai.com", "Admin@123")}
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-muted border border-border hover:bg-muted/80 text-foreground transition-colors font-medium flex items-center gap-1 cursor-pointer"
-                  >
-                    <CheckCircle2 className="size-3 text-indigo-500" />
-                    Admin (user1@gmai.com)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickFill("user@gmail.com", "Admin@123")}
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-muted border border-border hover:bg-muted/80 text-foreground transition-colors font-medium flex items-center gap-1 cursor-pointer"
-                  >
-                    <CheckCircle2 className="size-3 text-indigo-500" />
-                    Pengelola (user@gmail.com)
-                  </button>
-                </div>
-              </div>
-
-              <FieldDescription className="text-center text-xs text-muted-foreground pt-1">
+              <FieldDescription className="text-center text-xs text-muted-foreground pt-3">
                 Belum memiliki akun pelayanan?{" "}
                 <Link
                   to="/auth/register"
@@ -532,43 +551,99 @@ export function LoginForm({
             </FieldGroup>
           </form>
 
-          {/* Right Column: Visual Sanctuary Church Showcase */}
-          <div className="relative hidden bg-slate-950 md:flex flex-col justify-end p-8 lg:p-10 overflow-hidden select-none min-h-[580px]">
-            {/* Background Image */}
-            <img
-              src="/images/background.jpg"
-              alt="GPSI Soteria Sanctuary"
-              className="absolute inset-0 h-full w-full object-cover object-center opacity-45 mix-blend-luminosity scale-105"
-            />
+          {/* Right Column: Visual Sanctuary Church Showcase Carousel (Zero Overlay - Pure High Contrast) */}
+          <div className="relative hidden md:flex flex-col justify-between p-6 lg:p-8 overflow-hidden select-none min-h-[580px] bg-slate-950">
+            {/* Swiper Carousel for Card Showcase (No Overlay on Image) */}
+            <div className="absolute inset-0 z-0">
+              <Swiper
+                modules={[Autoplay, EffectFade]}
+                effect="fade"
+                fadeEffect={{ crossFade: true }}
+                speed={1000}
+                autoplay={{
+                  delay: 5000,
+                  disableOnInteraction: false,
+                }}
+                loop={true}
+                grabCursor={true}
+                onSwiper={setCardSwiper}
+                onSlideChange={(swiper) => setCardSlideIndex(swiper.realIndex)}
+                className="h-full w-full"
+              >
+                {cardSlides.map((slide, idx) => (
+                  <SwiperSlide key={idx} className="relative h-full w-full overflow-hidden">
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
 
-            {/* Radiant Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-indigo-950/30" />
-
-            {/* Glowing Accent Orbs */}
-            <div className="absolute top-1/4 right-1/4 size-48 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-1/3 left-1/4 size-48 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
-
-            {/* Content on Right Banner */}
-            <div className="relative z-10 space-y-4 text-white">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-[11px] font-semibold tracking-wide">
-                <Sparkles className="size-3 text-indigo-400" />
-                <span>Gereja Protestan di Indonesia</span>
+            {/* Top Bar inside Card: Tag Badge & Button Slider (Prev/Next) */}
+            <div className="relative z-10 flex items-center justify-between gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold tracking-wide shadow-xl">
+                <Sparkles className="size-3 text-amber-300" />
+                <span>{cardSlides[cardSlideIndex]?.tag}</span>
               </div>
 
-              <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight text-white">
-                GPSI Soteria
+              {/* Button Slider Controls */}
+              <div className="flex items-center gap-1 bg-black/70 backdrop-blur-md border border-white/20 p-1 rounded-full shadow-xl">
+                <button
+                  type="button"
+                  onClick={() => cardSwiper?.slidePrev()}
+                  className="size-7 rounded-full hover:bg-white/25 active:scale-95 text-white flex items-center justify-center transition-all cursor-pointer"
+                  title="Slide Sebelumnya"
+                  aria-label="Previous card slide"
+                >
+                  <ChevronLeft className="size-4" />
+                </button>
+                <div className="flex items-center gap-1 px-1">
+                  {cardSlides.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => cardSwiper?.slideToLoop(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        cardSlideIndex === i ? "w-4 bg-white" : "w-1.5 bg-white/40 hover:bg-white/80"
+                      }`}
+                      aria-label={`Go to slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => cardSwiper?.slideNext()}
+                  className="size-7 rounded-full hover:bg-white/25 active:scale-95 text-white flex items-center justify-center transition-all cursor-pointer"
+                  title="Slide Selanjutnya"
+                  aria-label="Next card slide"
+                >
+                  <ChevronRight className="size-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Bottom Content Card in Floating Frosted Glass (Text is 100% sharp without darkening the entire image) */}
+            <div className="relative z-10 p-5 rounded-2xl bg-black/75 backdrop-blur-md border border-white/20 shadow-2xl space-y-2.5 text-white mt-auto">
+              <h2 className="text-xl lg:text-2xl font-extrabold tracking-tight leading-tight text-white drop-shadow-md">
+                {cardSlides[cardSlideIndex]?.title}
               </h2>
 
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm">
-                &ldquo;Melayani dengan kasih Kristus, teguh dalam kebenaran firman, dan bersaksi bagi kemuliaan nama Tuhan di tengah jemaat dan masyarakat.&rdquo;
+              <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed drop-shadow-xs">
+                &ldquo;{cardSlides[cardSlideIndex]?.quote}&rdquo;
               </p>
 
-              <div className="pt-3 flex items-center gap-4 text-xs text-slate-400 border-t border-white/10">
-                <span>Pelayanan Terpadu</span>
-                <span>•</span>
-                <span>Warta Jemaat</span>
-                <span>•</span>
-                <span>Renungan Harian</span>
+              <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-300 border-t border-white/15">
+                {cardSlides[cardSlideIndex]?.badges.map((badge, bIdx) => (
+                  <span
+                    key={bIdx}
+                    className="px-2 py-0.5 rounded-md bg-white/10 border border-white/15 text-[10px] text-slate-200"
+                  >
+                    {badge}
+                  </span>
+                ))}
               </div>
             </div>
           </div>

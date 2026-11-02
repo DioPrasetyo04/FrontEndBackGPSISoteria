@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectFade, Pagination } from "swiper/modules";
+import { Autoplay, EffectFade } from "swiper/modules";
 import { signUp } from "@/services/auth/auth.service";
 import {
   ROLE_OPTIONS,
@@ -28,6 +28,8 @@ import {
   Compass,
   CalendarDays,
   HeartHandshake,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 // Import Swiper styles
@@ -66,6 +68,7 @@ const backgroundSlides = [
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeSlide, setActiveSlide] = useState(0);
+  const [bgSwiper, setBgSwiper] = useState<any>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -178,19 +181,21 @@ export const RegisterPage: React.FC = () => {
   }, [role]);
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 md:p-10 pt-20 pb-20 overflow-x-hidden overflow-y-auto bg-slate-950">
-      {/* ─── BACKGROUND SWIPER CAROUSEL ────────────────────────────────────────── */}
-      <div className="fixed inset-0 z-0 select-none pointer-events-none">
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 md:p-10 pt-20 pb-20 overflow-x-hidden overflow-y-auto">
+      {/* ─── BACKGROUND SWIPER CAROUSEL (ZERO OVERLAY - PURE CONTRAST) ────────── */}
+      <div className="fixed inset-0 z-0 select-none">
         <Swiper
-          modules={[Autoplay, EffectFade, Pagination]}
+          modules={[Autoplay, EffectFade]}
           effect="fade"
           fadeEffect={{ crossFade: true }}
-          speed={1200}
+          speed={1000}
           autoplay={{
-            delay: 5000,
+            delay: 6000,
             disableOnInteraction: false,
           }}
           loop={true}
+          grabCursor={true}
+          onSwiper={setBgSwiper}
           onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
           className="h-full w-full"
         >
@@ -199,35 +204,42 @@ export const RegisterPage: React.FC = () => {
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="h-full w-full object-cover object-center scale-105 transition-transform duration-10000 ease-out"
-                style={{
-                  filter: "brightness(0.65) saturate(1.15)",
-                }}
+                className="h-full w-full object-cover object-center"
               />
             </SwiperSlide>
           ))}
         </Swiper>
-
-        {/* Ambient Overlays (Vignette & Deep Gradient) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/75 z-10" />
-        <div className="absolute inset-0 bg-radial from-transparent via-slate-950/45 to-slate-950/90 z-10 pointer-events-none" />
-
-        {/* Glowing Orbs */}
-        <div className="absolute -top-32 -left-32 size-96 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none z-10" />
-        <div className="absolute -bottom-32 -right-32 size-96 rounded-full bg-blue-500/20 blur-3xl pointer-events-none z-10" />
       </div>
+
+      {/* ─── FLOATING BUTTON SLIDER (PREV & NEXT) ────────────────────────────── */}
+      <button
+        type="button"
+        onClick={() => bgSwiper?.slidePrev()}
+        className="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 size-11 sm:size-12 rounded-full bg-black/65 hover:bg-black/90 active:scale-95 text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 shadow-2xl cursor-pointer group"
+        title="Latar Belakang Sebelumnya"
+        aria-label="Previous Slide"
+      >
+        <ChevronLeft className="size-6 text-white group-hover:-translate-x-0.5 transition-transform" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => bgSwiper?.slideNext()}
+        className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 size-11 sm:size-12 rounded-full bg-black/65 hover:bg-black/90 active:scale-95 text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 shadow-2xl cursor-pointer group"
+        title="Latar Belakang Selanjutnya"
+        aria-label="Next Slide"
+      >
+        <ChevronRight className="size-6 text-white group-hover:translate-x-0.5 transition-transform" />
+      </button>
 
       {/* ─── TOP BRANDING BAR ─────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4 sm:px-10 bg-slate-950/60 backdrop-blur-md border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="size-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 p-1 flex items-center justify-center shadow-lg">
+          <div className="size-9 rounded-xl bg-white dark:bg-slate-900 border border-white/30 p-1 flex items-center justify-center shadow-lg">
             <img
-              src="/images/logo-soteria.png"
+              src="/images/logo-gpsi.png"
               alt="Logo GPSI Soteria"
               className="h-full w-full object-contain"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = "none";
-              }}
             />
           </div>
           <div>
@@ -508,15 +520,12 @@ export const RegisterPage: React.FC = () => {
 
             {/* ─── VISUAL SHOWCASE COLUMN (RIGHT) ─────────────────────────────── */}
             <div className="lg:col-span-5 relative hidden lg:flex flex-col justify-between p-8 xl:p-10 text-white overflow-hidden bg-slate-950">
-              {/* Background Image with Deep Overlay */}
+              {/* Background Image - Zero Overlay, Full Contrast */}
               <img
                 src="/images/background-tentang-kami.jpg"
                 alt="Pelayanan Jemaat GPSI Soteria"
-                className="absolute inset-0 h-full w-full object-cover object-center filter brightness-[0.45] saturate-[1.2] scale-105"
+                className="absolute inset-0 h-full w-full object-cover object-center scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-indigo-950/65 z-1" />
-              <div className="absolute -top-24 -right-24 size-80 rounded-full bg-indigo-500/25 blur-3xl pointer-events-none z-1" />
-              <div className="absolute -bottom-24 -left-24 size-80 rounded-full bg-blue-500/25 blur-3xl pointer-events-none z-1" />
 
               {/* Top Branding inside right panel */}
               <div className="relative z-10 flex items-center gap-3">
@@ -625,15 +634,38 @@ export const RegisterPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 ml-auto">
-          {backgroundSlides.map((_, i) => (
-            <span
-              key={i}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                activeSlide === i ? "w-6 bg-indigo-400" : "w-1.5 bg-white/30"
-              }`}
-            />
-          ))}
+        <div className="flex items-center gap-2 ml-auto pointer-events-auto bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-xl">
+          <button
+            type="button"
+            onClick={() => bgSwiper?.slidePrev()}
+            className="p-1 text-slate-300 hover:text-white transition-colors cursor-pointer"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+
+          <div className="flex items-center gap-1.5 px-1">
+            {backgroundSlides.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => bgSwiper?.slideToLoop(i)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  activeSlide === i ? "w-6 bg-white" : "w-2 bg-white/40 hover:bg-white/80"
+                }`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => bgSwiper?.slideNext()}
+            className="p-1 text-slate-300 hover:text-white transition-colors cursor-pointer"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="size-4" />
+          </button>
         </div>
       </footer>
     </div>

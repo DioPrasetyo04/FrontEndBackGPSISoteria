@@ -1,13 +1,12 @@
 import { useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Autoplay, EffectFade, Pagination } from "swiper/modules"
+import { Autoplay, EffectFade } from "swiper/modules"
 import { LoginForm } from "@/components/login-form"
-import { Sparkles, Compass } from "lucide-react"
+import { Sparkles, Compass, ChevronLeft, ChevronRight } from "lucide-react"
 
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/effect-fade"
-import "swiper/css/pagination"
 
 const backgroundSlides = [
   {
@@ -38,21 +37,24 @@ const backgroundSlides = [
 
 export default function LoginPage() {
   const [activeSlide, setActiveSlide] = useState(0)
+  const [bgSwiper, setBgSwiper] = useState<any>(null)
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 md:p-10 overflow-hidden bg-slate-950">
-      {/* ─── BACKGROUND SWIPER CAROUSEL ────────────────────────────────────────── */}
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 md:p-10 overflow-hidden">
+      {/* ─── BACKGROUND SWIPER CAROUSEL (ZERO OVERLAY - FULL PURE CONTRAST) ────── */}
       <div className="absolute inset-0 z-0 select-none">
         <Swiper
-          modules={[Autoplay, EffectFade, Pagination]}
+          modules={[Autoplay, EffectFade]}
           effect="fade"
           fadeEffect={{ crossFade: true }}
-          speed={1200}
+          speed={1000}
           autoplay={{
-            delay: 5000,
+            delay: 6000,
             disableOnInteraction: false,
           }}
           loop={true}
+          grabCursor={true}
+          onSwiper={setBgSwiper}
           onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
           className="h-full w-full"
         >
@@ -61,50 +63,56 @@ export default function LoginPage() {
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="h-full w-full object-cover object-center scale-105 transition-transform duration-10000 ease-out"
-                style={{
-                  filter: "brightness(0.65) saturate(1.15)",
-                }}
+                className="h-full w-full object-cover object-center"
               />
             </SwiperSlide>
           ))}
         </Swiper>
-
-        {/* Ambient Overlays (Vignette & Deep Gradient) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/70 z-10" />
-        <div className="absolute inset-0 bg-radial from-transparent via-slate-950/40 to-slate-950/90 z-10 pointer-events-none" />
-
-        {/* Glowing Orbs */}
-        <div className="absolute -top-32 -left-32 size-96 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none z-10" />
-        <div className="absolute -bottom-32 -right-32 size-96 rounded-full bg-blue-500/20 blur-3xl pointer-events-none z-10" />
       </div>
 
+      {/* ─── FLOATING BUTTON SLIDER (PREV & NEXT) ────────────────────────────── */}
+      <button
+        type="button"
+        onClick={() => bgSwiper?.slidePrev()}
+        className="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 size-11 sm:size-12 rounded-full bg-black/65 hover:bg-black/90 active:scale-95 text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 shadow-2xl cursor-pointer group"
+        title="Latar Belakang Sebelumnya"
+        aria-label="Previous Slide"
+      >
+        <ChevronLeft className="size-6 text-white group-hover:-translate-x-0.5 transition-transform" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => bgSwiper?.slideNext()}
+        className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 size-11 sm:size-12 rounded-full bg-black/65 hover:bg-black/90 active:scale-95 text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 shadow-2xl cursor-pointer group"
+        title="Latar Belakang Selanjutnya"
+        aria-label="Next Slide"
+      >
+        <ChevronRight className="size-6 text-white group-hover:translate-x-0.5 transition-transform" />
+      </button>
+
       {/* ─── TOP BRANDING BAR ─────────────────────────────────────────────────── */}
-      <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-5 sm:px-10">
-        <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 p-1 flex items-center justify-center shadow-lg">
+      <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-5 sm:px-10 pointer-events-none">
+        <div className="flex items-center gap-3 pointer-events-auto bg-black/60 backdrop-blur-md border border-white/20 px-3.5 py-2 rounded-2xl shadow-xl">
+          <div className="size-10 rounded-xl bg-white dark:bg-slate-900 border border-white/30 p-1 flex items-center justify-center shadow-lg">
             <img
-              src="/images/logo-soteria.png"
+              src="/images/logo-gpsi.png"
               alt="Logo GPSI Soteria"
               className="h-full w-full object-contain"
-              onError={(e) => {
-                // Fallback to logo.png or icon
-                (e.target as HTMLElement).style.display = "none"
-              }}
             />
           </div>
           <div>
             <div className="flex items-center gap-1.5 text-white font-bold text-sm tracking-wide">
               <span>GPSI SOTERIA</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-indigo-500/30 text-indigo-300 border border-indigo-400/30">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-white/20 text-white border border-white/30 backdrop-blur-xs font-semibold">
                 PORTAL ADMIN
               </span>
             </div>
-            <p className="text-[11px] text-slate-300">Gereja Protestan di Indonesia</p>
+            <p className="text-[11px] text-slate-200">Gereja Protestan di Indonesia</p>
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-300 bg-white/10 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full">
+        <div className="hidden sm:flex items-center gap-2 text-xs text-white bg-black/60 backdrop-blur-md border border-white/20 px-3.5 py-2 rounded-full shadow-xl pointer-events-auto">
           <Compass className="size-3.5 text-indigo-400 animate-spin" style={{ animationDuration: "12s" }} />
           <span>Sistem Informasi Terpadu Pelayanan</span>
         </div>
@@ -115,31 +123,54 @@ export default function LoginPage() {
         <LoginForm />
       </main>
 
-      {/* ─── BOTTOM SLIDE INFO & PAGINATION ────────────────────────────────────── */}
-      <footer className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-4 sm:px-10 pointer-events-none text-xs text-slate-400">
-        <div className="hidden md:flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-[11px] text-slate-200 backdrop-blur-md">
-            <Sparkles className="size-3 text-indigo-400" />
+      {/* ─── BOTTOM SLIDE INFO & BUTTON SLIDER PAGINATION ──────────────────────── */}
+      <footer className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-4 sm:px-10 pointer-events-none text-xs text-slate-200">
+        <div className="hidden md:flex items-center gap-3 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-2xl shadow-xl pointer-events-auto">
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/15 border border-white/20 text-[11px] text-white backdrop-blur-md shadow-sm">
+            <Sparkles className="size-3 text-amber-300" />
             {backgroundSlides[activeSlide]?.tag}
           </span>
-          <span className="text-slate-300 font-medium">
+          <span className="text-white font-semibold">
             {backgroundSlides[activeSlide]?.title}
           </span>
-          <span className="text-slate-500">•</span>
-          <span className="text-slate-400 text-[11px]">
+          <span className="text-slate-400">•</span>
+          <span className="text-slate-300 text-[11px]">
             {backgroundSlides[activeSlide]?.subtitle}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 ml-auto pointer-events-auto">
-          {backgroundSlides.map((_, i) => (
-            <span
-              key={i}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                activeSlide === i ? "w-6 bg-indigo-400" : "w-1.5 bg-white/30"
-              }`}
-            />
-          ))}
+        <div className="flex items-center gap-2 ml-auto pointer-events-auto bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-xl">
+          <button
+            type="button"
+            onClick={() => bgSwiper?.slidePrev()}
+            className="p-1 text-slate-300 hover:text-white transition-colors cursor-pointer"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+
+          <div className="flex items-center gap-1.5 px-1">
+            {backgroundSlides.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => bgSwiper?.slideToLoop(i)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  activeSlide === i ? "w-6 bg-white" : "w-2 bg-white/40 hover:bg-white/80"
+                }`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => bgSwiper?.slideNext()}
+            className="p-1 text-slate-300 hover:text-white transition-colors cursor-pointer"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="size-4" />
+          </button>
         </div>
       </footer>
     </div>

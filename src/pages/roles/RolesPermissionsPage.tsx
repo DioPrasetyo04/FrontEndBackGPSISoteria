@@ -9,6 +9,7 @@ import {
   getUserPermissions,
 } from "@/services/permission/permission.service";
 import { getAllUsers } from "@/services/user/user.service";
+import type { UserRole } from "@/services/user/types/user";
 import type {
   PermissionModuleGroup,
   RoleInfo,
