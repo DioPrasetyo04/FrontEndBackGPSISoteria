@@ -13,7 +13,6 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Church,
   Lock,
   Mail,
   User,
@@ -266,10 +265,14 @@ export const RegisterPage: React.FC = () => {
             {/* ─── FORM COLUMN (LEFT) ─────────────────────────────────────────── */}
             <div className="lg:col-span-7 p-6 sm:p-8 md:p-9 pb-8 sm:pb-10 flex flex-col justify-between space-y-5 w-full">
               <div className="space-y-6">
-                {/* Header with Church Badge */}
-                <div className="flex flex-col items-center sm:items-start gap-2 text-center sm:text-left">
-                  <div className="size-13 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center p-2.5 shadow-xs">
-                    <Church className="size-7" />
+                {/* Header with GPSI Soteria Logo Badge */}
+                <div className="flex flex-col items-center sm:items-start gap-3 text-center sm:text-left">
+                  <div className="size-14 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/20 p-2 flex items-center justify-center shadow-md">
+                    <img
+                      src="/images/logo-gpsi.png"
+                      alt="Logo GPSI Soteria"
+                      className="h-full w-full object-contain"
+                    />
                   </div>
                   <div>
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
@@ -529,8 +532,12 @@ export const RegisterPage: React.FC = () => {
 
               {/* Top Branding inside right panel */}
               <div className="relative z-10 flex items-center gap-3">
-                <div className="size-11 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-xl">
-                  <Church className="size-6 text-indigo-300" />
+                <div className="size-11 rounded-2xl bg-white dark:bg-slate-900 border border-white/30 p-1.5 flex items-center justify-center shadow-xl">
+                  <img
+                    src="/images/logo-gpsi.png"
+                    alt="Logo GPSI Soteria"
+                    className="h-full w-full object-contain"
+                  />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">

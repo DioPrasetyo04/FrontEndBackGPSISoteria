@@ -4,7 +4,6 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { getApprovalInfo, processApproval } from "@/services/auth/auth.service";
 import { toast } from "sonner";
 import {
-  Church,
   CheckCircle2,
   XCircle,
   AlertTriangle,
@@ -71,27 +70,31 @@ export const VerifyApprovalPage: React.FC = () => {
     approvalMutation.mutate({
       token,
       action: chosenAction,
-      reason: chosenAction === "reject" ? reason : undefined,
+      reason: chosenAction === "reject" && reason.trim() ? reason.trim() : undefined,
     });
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 p-4 text-foreground relative overflow-hidden py-12">
+    <div className="dark min-h-screen w-full flex items-center justify-center bg-linear-to-br from-slate-950 via-slate-900 to-indigo-950 p-4 text-slate-100 relative overflow-hidden py-12">
       {/* Background Glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-lg relative z-10">
-        <div className="bg-card/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 md:p-8 space-y-6">
+        <div className="bg-slate-900/90 backdrop-blur-2xl border border-slate-800/90 rounded-3xl shadow-2xl shadow-black/60 p-6 md:p-8 space-y-6 text-slate-100">
           {/* Header */}
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center size-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mb-2 shadow-inner">
-              <Church className="size-8" />
+            <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 mb-2 shadow-lg">
+              <img
+                src="/images/logo-gpsi.png"
+                alt="Logo GPSI Soteria"
+                className="h-full w-full object-contain"
+              />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white">
               Verifikasi Pendaftaran Akun
             </h1>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               Panel Otorisasi Administrator & Pengelola GPSI Soteria
             </p>
           </div>
@@ -100,7 +103,7 @@ export const VerifyApprovalPage: React.FC = () => {
           {isLoading && (
             <div className="py-12 text-center space-y-3">
               <div className="size-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-300">
                 Memuat data pendaftar dari token verifikasi...
               </p>
             </div>
@@ -108,7 +111,7 @@ export const VerifyApprovalPage: React.FC = () => {
 
           {/* Invalid Token State */}
           {(isError || (!isLoading && !applicant && !isCompleted)) && (
-            <div className="p-6 rounded-2xl bg-slate-900/80 border border-rose-500/30 text-center space-y-4">
+            <div className="p-6 rounded-2xl bg-slate-950/70 border border-rose-500/30 text-center space-y-4">
               <div className="inline-flex items-center justify-center size-12 rounded-xl bg-rose-500/20 text-rose-400">
                 <AlertTriangle className="size-6" />
               </div>
@@ -116,7 +119,7 @@ export const VerifyApprovalPage: React.FC = () => {
                 <h3 className="text-base font-semibold text-white">
                   Tautan Verifikasi Tidak Berlaku
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed">
                   {(error as any)?.response?.data?.message ||
                     "Tautan ini tidak valid, sudah pernah digunakan, atau masa berlakunya telah habis."}
                 </p>
@@ -135,7 +138,7 @@ export const VerifyApprovalPage: React.FC = () => {
 
           {/* Completed State */}
           {isCompleted && (
-            <div className="p-6 rounded-2xl bg-slate-900/80 border border-emerald-500/30 text-center space-y-4 animate-in fade-in zoom-in-95">
+            <div className="p-6 rounded-2xl bg-slate-950/70 border border-emerald-500/30 text-center space-y-4 animate-in fade-in zoom-in-95">
               <div
                 className={`inline-flex items-center justify-center size-12 rounded-xl ${
                   actionChoice === "approve"
@@ -155,7 +158,7 @@ export const VerifyApprovalPage: React.FC = () => {
                     ? "Pendaftaran Berhasil Disetujui!"
                     : "Pendaftaran Berhasil Ditolak"}
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-200 leading-relaxed">
                   {resultMessage}
                 </p>
               </div>
@@ -174,8 +177,8 @@ export const VerifyApprovalPage: React.FC = () => {
           {/* Active Applicant Review State */}
           {!isLoading && applicant && !isCompleted && (
             <div className="space-y-5 animate-in fade-in">
-              <div className="bg-slate-950/70 border border-white/10 rounded-xl p-4 space-y-3 text-xs">
-                <div className="flex items-center gap-3 pb-3 border-b border-white/10">
+              <div className="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-4 space-y-3 text-xs">
+                <div className="flex items-center gap-3 pb-3 border-b border-slate-800/80">
                   <div className="size-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center">
                     <User className="size-5" />
                   </div>
@@ -183,8 +186,8 @@ export const VerifyApprovalPage: React.FC = () => {
                     <h2 className="text-sm font-bold text-white">
                       {applicant.name}
                     </h2>
-                    <p className="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
-                      <Mail className="size-3" />
+                    <p className="text-slate-300 text-xs flex items-center gap-1.5 mt-0.5">
+                      <Mail className="size-3 text-indigo-400" />
                       {applicant.email}
                     </p>
                   </div>
@@ -199,11 +202,13 @@ export const VerifyApprovalPage: React.FC = () => {
                   </div>
                   <div className="flex justify-between items-center py-1">
                     <span className="text-slate-400">Waktu Mendaftar</span>
-                    <span className="text-slate-300 font-medium">
-                      {new Date(applicant.createdAt).toLocaleString("id-ID", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
+                    <span className="text-slate-200 font-medium">
+                      {applicant.createdAt
+                        ? new Date(applicant.createdAt).toLocaleString("id-ID", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })
+                        : "-"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-1">
@@ -226,7 +231,7 @@ export const VerifyApprovalPage: React.FC = () => {
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     placeholder="Contoh: Belum terdaftar dalam data jemaat sektor..."
-                    className="w-full px-3 py-2 bg-slate-900/80 border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                    className="w-full px-3 py-2 bg-slate-950/70 border border-slate-700/70 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
                   />
                 </div>
               )}
@@ -262,7 +267,7 @@ export const VerifyApprovalPage: React.FC = () => {
                 </button>
               </div>
 
-              <p className="text-[11px] text-slate-500 text-center">
+              <p className="text-[11px] text-slate-400 text-center">
                 Aksi ini bersifat permanen dan akan langsung memperbarui hak akses pengguna di database.
               </p>
             </div>
